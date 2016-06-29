@@ -21,5 +21,11 @@ RUN curl -o wordpress.tar.gz -SL https://ja.wordpress.org/wordpress-${WORDPRESS_
 
 COPY ./docker-entrypoint.sh /entrypoint.sh
 
+
+
 # grr, ENTRYPOINT resets CMD now
 ENTRYPOINT ["/entrypoint.sh"]
+
+CMD bash
+
+VOLUME ["/var/www"]

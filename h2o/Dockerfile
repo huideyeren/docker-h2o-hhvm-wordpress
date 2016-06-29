@@ -32,6 +32,7 @@ RUN openssl genrsa -out server.key 4096
 RUN openssl req -new -batch -key server.key -out server.csr
 RUN openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
 RUN ln -s /etc/ssl/certs/ca-certificates.crt ca-bundle.crt
+COPY ./fetch-ocsp-response fetch-ocsp-response
 
 CMD h2o -c /etc/h2o/h2o.conf
 

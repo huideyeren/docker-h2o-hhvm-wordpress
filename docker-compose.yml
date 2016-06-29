@@ -1,18 +1,22 @@
 version: '2'
 
 services:
-  db:
-    image: mariadb
+  mariadb:
+    image: mariadb:latest
     volumes:
-      - db-data:/var/lib/mysql
+      - ./db-data:/var/lib
     env_file: .env
     networks:
       - back
 
   wordpress:
     build: ./app
+    links:
+      - proxy
+      - mariadb:mysql
+      - hhvm
     volumes:
-      - hhvm-data:/var/www
+      - ./hhvm-data:/var/www
     networks:
       - front
       - back
@@ -20,7 +24,7 @@ services:
   hhvm:
     image: yewton/hhvm
     volumes:
-      - hhvm-data:/var/www
+      - ./hhvm-data:/var/www
     expose:
       - "9000"
     command: hhvm -m server -d hhvm.server.type=fastcgi -d hhvm.server.port=9000
@@ -32,18 +36,12 @@ services:
   proxy:
     build: ./h2o
     volumes:
-      - hhvm-data:/var/www
+      - ./hhvm-data:/var/www
     ports:
       - "80:80"
       - "443:443"
     networks:
       - front
-
-volumes:
-  hhvm-data:
-    driver: local
-  db-data:
-    driver: local
 
 networks:
   front:

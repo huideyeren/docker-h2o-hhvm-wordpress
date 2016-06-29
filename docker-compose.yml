@@ -13,6 +13,9 @@ services:
     build: ./app
     volumes:
       - hhvm-data:/var/www
+    networks:
+      - front
+      - back
 
   hhvm:
     image: yewton/hhvm

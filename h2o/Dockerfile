@@ -22,7 +22,8 @@ RUN make h2o
 RUN mv /tmp/h2o/h2o /usr/sbin/h2o
 RUN mkdir /etc/h2o
 RUN mkdir /var/www
-ADD h2o.conf /etc/h2o/h2o.conf
+WORKDIR /etc/h2o
+ADD h2o.conf h2o.conf
 
 RUN rm -rf /tmp/h2o
 

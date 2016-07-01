@@ -11,32 +11,30 @@ services:
 
   wordpress:
     build: ./app
-    links:
-      - proxy
-      - mariadb:mysql
-      - hhvm
     volumes:
-      - ./hhvm-data:/var/www
+      - ./hhvm-data:/var
     networks:
       - front
       - back
 
   hhvm:
     image: yewton/hhvm
-    volumes:
-      - ./hhvm-data:/var/www
+    volumes_from:
+      - wordpress
     expose:
       - "9000"
     command: hhvm -m server -d hhvm.server.type=fastcgi -d hhvm.server.port=9000
     env_file: .env
+    links:
+      - mariadb:mariadb
     networks:
       - front
       - back
 
   proxy:
     build: ./h2o
-    volumes:
-      - ./hhvm-data:/var/www
+    volumes_from:
+      - wordpress
     ports:
       - "80:80"
       - "443:443"
